@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Rent A Man</string>
+    <string name="rentaman">Rent A Man</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="singin">Sing in</string>
+    <string name="rememberpassword">Remember password</string>
+    <string name="name">Name</string>
+    <string name="lastname">Lastname</string>
+    <string name="confirm_pw">Confirm password</string>
+    <string name="phone">(+1)XXX-XXX-XXXX</string>
+    <string name="Male">Male</string>
+    <string name="Female">Female</string>
+    <string name="save">Save</string>
+    <string name="birthdate">Age</string>
+    <string name="warning">Verify that the fields are full</string>
+    <string name="successful">record success</string>
+    <string name="warp">Passwords do not match</string>
+
+    <string-array name="gender">
+        <item>@string/Male</item>
+        <item>@string/Female</item>
+    </string-array>
+
+    <string-array name="lg">
+        <item>@string/rememberpassword</item>
+        <item>@string/singin</item>
+    </string-array>
+</resources>
