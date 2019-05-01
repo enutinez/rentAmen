@@ -5,19 +5,17 @@ import java.util.Calendar;
 public class User {
 
  private String Name, Lasttname,Username, Password, Sex;
- private Calendar Birthdate;
  private int Cellphone, Age;
 
-    public User(String name, String lasttname, String username, String password, String sex, Calendar birthdate, int cellphone) {
+    public User(String name, String lasttname, String username, String password, String sex, int age, int cellphone) {
 
         Name = name;
         Lasttname = lasttname;
         Username = username;
         Password = password;
         Sex = sex;
-        Birthdate = birthdate;
         Cellphone = cellphone;
-        Age = this.Birthdate.compareTo(Calendar.getInstance());
+        Age = age;
     }
 
     public int getAge() {
@@ -74,14 +72,6 @@ public class User {
 
     public void setCellphone(int cellphone) {
         Cellphone = cellphone;
-    }
-
-    public Calendar getBirthdate() {
-        return Birthdate;
-    }
-
-    public void setBirthdate(Calendar birthdate) {
-        Birthdate = birthdate;
     }
 
     public void SaveUser (){ Data.Save(this);}

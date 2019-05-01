@@ -13,9 +13,10 @@
     <string name="Male">Male</string>
     <string name="Female">Female</string>
     <string name="save">Save</string>
-    <string name="birthdate">Birthdate (dd/mm/yyyy)</string>
+    <string name="birthdate">Age</string>
     <string name="warning">Verify that the fields are full</string>
     <string name="successful">record success</string>
+    <string name="warp">Passwords do not match</string>
 
     <string-array name="gender">
         <item>@string/Male</item>

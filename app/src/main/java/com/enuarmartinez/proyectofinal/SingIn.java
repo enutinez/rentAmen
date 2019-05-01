@@ -20,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -27,10 +28,11 @@ import java.util.Map;
 
 public class SingIn extends AppCompatActivity {
 
-    private EditText Name, Lastname, Username, Password, Cellphone, Birthdate;
+    private EditText Name, Lastname, Username, Password, Cellphone, Age;
     private Spinner Gender;
     private Resources Resources;
     private String OpGender[];
+    private ArrayList<User> Users;
     private ArrayAdapter<String> Adapter;
     private Intent In;
     private Calendar myCalendar = Calendar.getInstance();
@@ -49,20 +51,14 @@ public class SingIn extends AppCompatActivity {
         Username =(EditText)findViewById(R.id.TxtUsername);
         Password = (EditText)findViewById(R.id.TxtPassword);
         Cellphone= (EditText)findViewById(R.id.TxtPhone);
-        Birthdate = (EditText)findViewById(R.id.TxtBirthdate);
+        Age = (EditText)findViewById(R.id.TxtBirthdate);
         Save = (Button)findViewById(R.id.btnSave);
-        Birthdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(SingIn.this, date, myCalendar.get(Calendar.YEAR),
-                        myCalendar.get(Calendar.MONTH),myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
         Gender = (Spinner)findViewById(R.id.Gender);
         Resources = this.getResources();
         OpGender = Resources.getStringArray(R.array.gender);
         Adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, OpGender);
         Gender.setAdapter(Adapter);
+        Users = Data.Get();
         inicializarFirebase();
     }
 
@@ -76,80 +72,82 @@ public class SingIn extends AppCompatActivity {
         return firebaseDatabase;
     }
 
-    //metodo para mostrar el calendario
-    DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            myCalendar.set(Calendar.YEAR, year);
-            myCalendar.set(Calendar.MONTH, month);
-            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            actualizarInput();
-        }
-    };
-    private void actualizarInput() {
-        String formatoDeFecha = "dd/MM/yyyy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, Locale.US);
-
-        Birthdate.setText(sdf.format(myCalendar.getTime()));
-
-    }
-
-
-    public void SaveUser(View view) throws ParseException {
+    public void Save(View view){
         String NameV, LastnameV, UsernameV, PasswordV, GenderV;
-        Calendar BirthdateV = Calendar.getInstance();
+        int BirthdateV;
         int CellphoneV;
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         NameV = Name.getText().toString();
         LastnameV = Lastname.getText().toString();
         UsernameV = Username.getText().toString();
         PasswordV = Password.getText().toString();
         GenderV = Gender.getSelectedItem().toString();
-        BirthdateV.setTime(sdf.parse(Birthdate.getText().toString()));
+
+        /*if (!PasswordV.equals(ConfirmV)){
+            Toast.makeText(this, Resources.getString(R.string.warp), Toast.LENGTH_LONG).show();
+        }*/
+
+        if (Age.getText().toString().isEmpty()){
+            BirthdateV = -1;
+        } else {
+            BirthdateV = Integer.parseInt(Age.getText().toString());
+        }
+
         if (Cellphone.getText().toString().isEmpty()){
             CellphoneV = -1;
         } else {
             CellphoneV = Integer.parseInt(Cellphone.getText().toString());
         }
+
+
         if (NameV.isEmpty() || LastnameV.isEmpty() || UsernameV.isEmpty() ||
-        PasswordV.isEmpty() || GenderV.isEmpty() || BirthdateV.equals(" ")
-        || CellphoneV == -1){
+        PasswordV.isEmpty() || GenderV.isEmpty() || BirthdateV == -1
+        || CellphoneV == -1 /*|| ConfirmV.isEmpty()*/){
             Toast.makeText(this, Resources.getString(R.string.warning), Toast.LENGTH_LONG).show();
-
-            if (NameV.isEmpty()){
-                Name.setError("Required");
-            }
-            if (LastnameV.isEmpty()){
-                Lastname.setError("Required");
-            }
-            if (UsernameV.isEmpty()){
-                Username.setError("Required");
-            }
-            if (PasswordV.isEmpty()){
-                Password.setError("Required");
-            }
-            if (BirthdateV.equals(" ")){
-                Birthdate.setError("Required");
-            }
-            if (CellphoneV == -1){
-                Cellphone.setError("Required");
-            }
-
+            validarCajas(NameV, LastnameV, UsernameV, PasswordV, GenderV, BirthdateV, CellphoneV);
         }else {
-            User u = new User(NameV,LastnameV,UsernameV,PasswordV,GenderV,BirthdateV,CellphoneV);
-            Map<String, Object> dataUser = new HashMap<>();
+            //User u = new User(NameV,LastnameV,UsernameV,PasswordV,GenderV,BirthdateV,CellphoneV);
+            /*Map<String, Object> dataUser = new HashMap<>();
             dataUser.put("Name", NameV);
             dataUser.put("Lastame", LastnameV);
             dataUser.put("Username", UsernameV);
             dataUser.put("Password", PasswordV);
             dataUser.put("Gender", GenderV);
             dataUser.put("Birthdate", BirthdateV);
-            dataUser.put("Cellphone", CellphoneV);
+            dataUser.put("Cellphone", CellphoneV);*/
 
-            databaseReference.child("User").push().setValue(dataUser);
-
+            User U = new User(NameV,LastnameV,UsernameV,PasswordV,GenderV,BirthdateV,CellphoneV);
+            databaseReference.child("User").push().setValue(U);
+            U.SaveUser();
             Toast.makeText(this, Resources.getString(R.string.successful), Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    private void validarCajas(String NameV, String LastnameV, String UsernameV, String PasswordV, String GenderV,
+            Integer BirthdateV, Integer CellphoneV /*,String ConfirmV*/) {
+
+        if (NameV.isEmpty()){
+            Name.setError("Required");
+        }
+        if (LastnameV.isEmpty()){
+            Lastname.setError("Required");
+        }
+        if (UsernameV.isEmpty()){
+            Username.setError("Required");
+        }
+        if (PasswordV.isEmpty()){
+            Password.setError("Required");
+        }
+        if (BirthdateV == -1){
+            Age.setError("Required");
+        }
+        if (CellphoneV == -1){
+            Cellphone.setError("Required");
+        }
+        /*if (ConfirmV.isEmpty()){
+            Confirm.setError("Required");
+        }*/
+    }
+
 
 }

@@ -64,16 +64,6 @@
                 android:hint="@string/password"
                 android:inputType="textPassword" />
 
-            <EditText
-                android:id="@+id/TxtConfirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:ems="10"
-                android:gravity="center"
-                android:hint="@string/confirm_pw"
-                android:inputType="textPassword" />
-
             <Spinner
                 android:id="@+id/Gender"
                 android:layout_width="match_parent"
@@ -87,10 +77,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:ems="10"
-                android:focusable="false"
                 android:gravity="center"
                 android:hint="@string/birthdate"
-                android:inputType="date" />
+                android:inputType="number" />
 
             <EditText
                 android:id="@+id/TxtPhone"
@@ -106,7 +95,7 @@
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="SaveUser"
+                android:onClick="Save"
                 android:text="@string/save" />
 
         </LinearLayout>
