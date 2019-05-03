@@ -91,6 +91,16 @@
                 android:hint="@string/phone"
                 android:inputType="phone" />
 
+            <EditText
+                android:id="@+id/TxtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:ems="10"
+                android:gravity="center"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+
             <Button
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"

@@ -17,6 +17,7 @@
     <string name="warning">Verify that the fields are full</string>
     <string name="successful">record success</string>
     <string name="warp">Passwords do not match</string>
+    <string name="email">Email</string>
 
     <string-array name="gender">
         <item>@string/Male</item>

@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,7 +29,7 @@ import java.util.Map;
 
 public class SingIn extends AppCompatActivity {
 
-    private EditText Name, Lastname, Username, Password, Cellphone, Age;
+    private EditText Name, Lastname, Username, Password, Cellphone, Age, Email;
     private Spinner Gender;
     private Resources Resources;
     private String OpGender[];
@@ -38,6 +39,7 @@ public class SingIn extends AppCompatActivity {
     private Calendar myCalendar = Calendar.getInstance();
     private Button Save;
     private FirebaseDatabase firebaseDatabase;
+    private FirebaseAuth mAuth;
     DatabaseReference databaseReference;
 
 
@@ -52,6 +54,7 @@ public class SingIn extends AppCompatActivity {
         Password = (EditText)findViewById(R.id.TxtPassword);
         Cellphone= (EditText)findViewById(R.id.TxtPhone);
         Age = (EditText)findViewById(R.id.TxtBirthdate);
+        Email = (EditText)findViewById(R.id.TxtEmail);
         Save = (Button)findViewById(R.id.btnSave);
         Gender = (Spinner)findViewById(R.id.Gender);
         Resources = this.getResources();
@@ -60,9 +63,11 @@ public class SingIn extends AppCompatActivity {
         Gender.setAdapter(Adapter);
         Users = Data.Get();
         inicializarFirebase();
+
     }
 
     private void inicializarFirebase() {
+        mAuth = FirebaseAuth.getInstance();
         FirebaseApp.initializeApp(this);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
@@ -73,7 +78,7 @@ public class SingIn extends AppCompatActivity {
     }
 
     public void Save(View view){
-        String NameV, LastnameV, UsernameV, PasswordV, GenderV;
+        String NameV, LastnameV, UsernameV, PasswordV, GenderV, EmailV;
         int BirthdateV;
         int CellphoneV;
         NameV = Name.getText().toString();
@@ -81,6 +86,7 @@ public class SingIn extends AppCompatActivity {
         UsernameV = Username.getText().toString();
         PasswordV = Password.getText().toString();
         GenderV = Gender.getSelectedItem().toString();
+        EmailV = Email.getText().toString();
 
         /*if (!PasswordV.equals(ConfirmV)){
             Toast.makeText(this, Resources.getString(R.string.warp), Toast.LENGTH_LONG).show();
@@ -101,9 +107,9 @@ public class SingIn extends AppCompatActivity {
 
         if (NameV.isEmpty() || LastnameV.isEmpty() || UsernameV.isEmpty() ||
         PasswordV.isEmpty() || GenderV.isEmpty() || BirthdateV == -1
-        || CellphoneV == -1 /*|| ConfirmV.isEmpty()*/){
+        || CellphoneV == -1 || EmailV.isEmpty() /*|| ConfirmV.isEmpty()*/){
             Toast.makeText(this, Resources.getString(R.string.warning), Toast.LENGTH_LONG).show();
-            validarCajas(NameV, LastnameV, UsernameV, PasswordV, GenderV, BirthdateV, CellphoneV);
+            validarCajas(NameV, LastnameV, UsernameV, PasswordV, GenderV, BirthdateV, CellphoneV, EmailV);
         }else {
             //User u = new User(NameV,LastnameV,UsernameV,PasswordV,GenderV,BirthdateV,CellphoneV);
             /*Map<String, Object> dataUser = new HashMap<>();
@@ -115,7 +121,7 @@ public class SingIn extends AppCompatActivity {
             dataUser.put("Birthdate", BirthdateV);
             dataUser.put("Cellphone", CellphoneV);*/
 
-            User U = new User(NameV,LastnameV,UsernameV,PasswordV,GenderV,BirthdateV,CellphoneV);
+            User U = new User(NameV,LastnameV,UsernameV,PasswordV,GenderV,BirthdateV,CellphoneV, EmailV);
             databaseReference.child("User").push().setValue(U);
             U.SaveUser();
             Toast.makeText(this, Resources.getString(R.string.successful), Toast.LENGTH_SHORT).show();
@@ -124,7 +130,7 @@ public class SingIn extends AppCompatActivity {
 
 
     private void validarCajas(String NameV, String LastnameV, String UsernameV, String PasswordV, String GenderV,
-            Integer BirthdateV, Integer CellphoneV /*,String ConfirmV*/) {
+            Integer BirthdateV, Integer CellphoneV, String EmailV /*,String ConfirmV*/) {
 
         if (NameV.isEmpty()){
             Name.setError("Required");
@@ -143,6 +149,10 @@ public class SingIn extends AppCompatActivity {
         }
         if (CellphoneV == -1){
             Cellphone.setError("Required");
+        }
+
+        if (EmailV.isEmpty()){
+            Email.setError("Required");
         }
         /*if (ConfirmV.isEmpty()){
             Confirm.setError("Required");

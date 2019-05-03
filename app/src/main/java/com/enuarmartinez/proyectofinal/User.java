@@ -4,10 +4,10 @@ import java.util.Calendar;
 
 public class User {
 
- private String Name, Lasttname,Username, Password, Sex;
+ private String Name, Lasttname,Username, Password, Sex, Email;
  private int Cellphone, Age;
 
-    public User(String name, String lasttname, String username, String password, String sex, int age, int cellphone) {
+    public User(String name, String lasttname, String username, String password, String sex, int age, int cellphone, String email) {
 
         Name = name;
         Lasttname = lasttname;
@@ -16,6 +16,15 @@ public class User {
         Sex = sex;
         Cellphone = cellphone;
         Age = age;
+        Email = email;
+    }
+
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public int getAge() {
